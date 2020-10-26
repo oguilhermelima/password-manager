@@ -1,0 +1,63 @@
+service: password-manager
+frameworkVersion: '2'
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+
+
+custom:
+  wsgi:
+    app: app.app
+    packRequirements: false
+  env-file: ${file(resources/environment-${opt:stage, self:provider.stage, 'dev'}.yml)}
+
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: ${self:custom.env-file.password-table}
+  package:
+    include:
+      - app/**
+      - app.py
+
+
+functions:
+  createPassword:
+    handler: wsgi.handler
+    memorySize: 128
+    events:
+      - http:
+          path: passwords/
+          method: post
+          cors: true
+
+  getPasswords:
+    handler: wsgi.handler
+    memorySize: 256
+    events:
+      - http:
+          path: passwords/
+          method: get
+          cors: true
+
+  getPassword:
+    handler: wsgi.handler
+    memorySize: 128
+    events:
+      - http:
+          path: passwords/{password_id}
+          method: get
+          cors: true
