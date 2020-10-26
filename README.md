@@ -1,6 +1,6 @@
 # serverless-flask-model
 
-# Setup
+## Setup
 
 ### AWS Credentials
 If you are using AWS environment you'll need to setup the credentials. 
@@ -14,13 +14,32 @@ sudo apt install npm
 ```
 ### Install Serverless
 ```
-npm install -g serverless
+sudo npm install -g serverless
 ```
 ### Start Serverless Project
-Enter in your project and run the command ``` serverless ``` and follow the steps.
+Run the command: **``` serverless ```** on the project folder and follow the serverless steps on terminal.
 
 ### Serverless plugins
 ```
 sls plugin install -n serverless-wsgi
 sls plugin install -n serverless-python-requirements
+```
+
+### Setup DynamoDB
+Run the python scripts to create and populate an example table in DynamoDB. 
+```
+python3 scripts/create_tables.py
+python3 scripts/entering_data.py
+```
+After the tables creation, update the environment file in resource folder with the table ARN.
+
+## Deploy
+
+### DEV
+```
+sls deploy --stage dev
+```
+### PROD
+```
+sls deploy --stage dev
 ```
