@@ -3,13 +3,8 @@ frameworkVersion: '2'
 
 plugins:
   - serverless-python-requirements
-  - serverless-wsgi
-
 
 custom:
-  wsgi:
-    app: app.app
-    packRequirements: false
   env-file: ${file(resources/environment-${opt:stage, self:provider.stage, 'dev'}.yml)}
 
 
@@ -28,15 +23,17 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: ${self:custom.env-file.password-table}
-  package:
-    include:
-      - app/**
-      - app.py
+
+package:
+  individually: true
+  include:
+    - src/**
 
 
 functions:
   createPassword:
-    handler: wsgi.handler
+    handler: password_controller.create_password_controller
+    module: src/application/password
     memorySize: 128
     events:
       - http:
@@ -45,7 +42,8 @@ functions:
           cors: true
 
   getPasswords:
-    handler: wsgi.handler
+    handler: password_controller.get_passwords
+    module: src/application/password
     memorySize: 256
     events:
       - http:
@@ -54,7 +52,8 @@ functions:
           cors: true
 
   getPassword:
-    handler: wsgi.handler
+    handler: password_controller.get_password
+    module: src/application/password
     memorySize: 128
     events:
       - http:

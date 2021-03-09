@@ -1,28 +1,22 @@
-from flask import Blueprint, request, jsonify
-from utils.schema import PasswordSchema
-from utils.params_validator import required_params
-import src.domain.password.service as service
-
-password_bp = Blueprint('passwords', __name__)
+from src.domain.password.get_passwords import get_passwords
+from src.domain.password.create_password import create_password
+from src.domain.password.get_password import get_password
 
 
-@password_bp.route("/passwords/")
-def get_passwords():
-    user_id = request.headers['user_id']
-    passwords = service.get_passwords(user_id)
-    return jsonify(passwords), 200
+def get_passwords_controller(event, context):
+    user_id = event['headers']['user_id']
+    passwords = get_passwords(user_id)
+    return passwords, 200
 
 
-@password_bp.route("/passwords/", methods=["POST"])
-@required_params(PasswordSchema())
-def create_password():
-    data = request.get_json()
-    response = service.create_password(data)
-    return jsonify(response), 201
+def create_password_controller(event, context):
+    data = event['body']
+    response = create_password(data)
+    return response, 201
 
 
-@password_bp.route("/passwords/<password_id>", methods=["GET"])
-def get_password(password_id):
-    user_id = request.headers['user_id']
-    password = service.get_password(user_id, password_id)
-    return jsonify(password), 200
+def get_password_controller(event, context):
+    user_id = event['headers']['user_id']
+    password_id = event['pathParameters']['password_id']
+    password = get_password(user_id, password_id)
+    return password, 200
