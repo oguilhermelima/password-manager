@@ -1,5 +1,5 @@
 from flask import Flask
-from password.routes import password_bp
+from src.application.password.password_controller import password_bp
 
 
 app = Flask(__name__)

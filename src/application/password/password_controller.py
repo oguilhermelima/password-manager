@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from password.schema import PasswordSchema
+from utils.schema import PasswordSchema
 from utils.params_validator import required_params
-import password.service as service
+import src.domain.password.service as service
 
 password_bp = Blueprint('passwords', __name__)
 

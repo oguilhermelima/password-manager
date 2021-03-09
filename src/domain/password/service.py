@@ -1,4 +1,4 @@
-import password.database as database
+from src.infrastructure.password import database
 import uuid
 from datetime import datetime
 
