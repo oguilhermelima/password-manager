@@ -21,7 +21,6 @@ Run the command: **``` serverless ```** on the project folder and follow the ser
 
 ### Serverless plugins
 ```
-sls plugin install -n serverless-wsgi
 sls plugin install -n serverless-python-requirements
 ```
 
