@@ -13,6 +13,7 @@ provider:
   runtime: python3.8
   stage: ${opt:stage, 'dev'}
   region: us-east-1
+  environment: ${file(resources/environment-${opt:stage, self:provider.stage, 'dev'}.yml)}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
